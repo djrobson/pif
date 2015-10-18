@@ -311,13 +311,14 @@ bool Tpif::disableCfgInterface() {
 //---------------------------------------------------------------------
 bool Tpif::_progPage(int Acmd, const uint8_t *p) {
   TllWrBuf oBuf;
+  const struct timespec ts = {0, (200*MICROSEC)};
   oBuf.byte(Acmd).byte(0).byte(0).byte(1);
   for (int i=0; i<CFG_PAGE_SIZE; i++)
     oBuf.byte(*p++);
 
   bool ok = _cfgWrite(oBuf);
   // sleep for 200us
-  nanosleep((struct timespec[]){{0, (200 * MICROSEC)}}, NULL);
+  nanosleep(&ts, NULL);
   return ok;
   }
 
@@ -389,13 +390,14 @@ bool Tpif::writeUfmPages(int pageNumber, int numPages, uint8_t *p) {
 bool Tpif::setUsercode(uint8_t* p) {
   assert(p);
   TllWrBuf oBuf;
+  const struct timespec ts = {0, (200*MICROSEC)};
   oBuf.byte(ISC_PROGRAM_USERCODE).byte(0).byte(0).byte(0);
   for (int i=0; i<4; i++)
     oBuf.byte(p[i]);
 
   bool ok = _cfgWrite(oBuf);
   // sleep for 200us
-  nanosleep((struct timespec[]){{0, (200 * MICROSEC)}}, NULL);
+  nanosleep(&ts, NULL);
   return ok;
   }
 
